@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Career Roadmap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <h1>🚀 IT Career Roadmap</h1>
+            <p>Find your perfect career path in the IT field</p>
+        </div>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="🔍 Search a career... (e.g. AI, DevOps, Web)">
+    </div>
+
+    <!-- Search Results -->
+    <div id="searchResults" class="careers-grid" style="display:none;"></div>
+
+    <!-- All Careers -->
+    <div class="container">
+        <h2 class="section-title">Choose Your Career Path</h2>
+        <div class="careers-grid" id="careersGrid">
+            {% for key, career in careers.items() %}
+            <div class="career-card" onclick="window.location.href='/career/{{ key }}'">
+                <div class="career-icon">
+                    {% if key == 'ai-ml' %}🤖
+                    {% elif key == 'devops' %}⚙️
+                    {% elif key == 'webdev' %}🌐
+                    {% elif key == 'cybersecurity' %}🔒
+                    {% elif key == 'datascience' %}📊
+                    {% elif key == 'cloud' %}☁️
+                    {% endif %}
+                </div>
+                <h3>{{ career.title }}</h3>
+                <p>{{ career.description }}</p>
+                <div class="career-meta">
+                    <span>⏱ {{ career.duration }}</span>
+                    <span>💰 {{ career.salary }}</span>
+                </div>
+                <button class="view-btn">View Roadmap →</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Made with ❤️ for IT Students | All courses are FREE on YouTube</p>
+    </footer>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const careersGrid = document.getElementById('careersGrid');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+
+            if (query.length < 2) {
+                searchResults.style.display = 'none';
+                careersGrid.style.display = 'grid';
+                return;
+            }
+
+            fetch(`/search?q=${query}`)
+                .then(res => res.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    if (Object.keys(data).length === 0) {
+                        searchResults.innerHTML = '<p class="no-results">No careers found. Try another search!</p>';
+                    } else {
+                        for (const [key, career] of Object.entries(data)) {
+                            searchResults.innerHTML += `
+                                <div class="career-card" onclick="window.location.href='/career/${key}'">
+                                    <h3>${career.title}</h3>
+                                    <p>${career.description}</p>
+                                    <div class="career-meta">
+                                        <span>⏱ ${career.duration}</span>
+                                        <span>💰 ${career.salary}</span>
+                                    </div>
+                                    <button class="view-btn">View Roadmap →</button>
+                                </div>
+                            `;
+                        }
+                    }
+                    searchResults.style.display = 'grid';
+                    careersGrid.style.display = 'none';
+                });
+        });
+    </script>
+
+</body>
+</html>

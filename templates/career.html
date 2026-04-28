@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ career.title }} Roadmap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="/" class="back-btn">← Back to Careers</a>
+            <h1>{{ career.title }}</h1>
+            <p>{{ career.description }}</p>
+            <div class="career-meta-header">
+                <span>⏱ Duration: {{ career.duration }}</span>
+                <span>💰 Salary: {{ career.salary }}</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Roadmap Steps -->
+    <div class="container">
+        <h2 class="section-title">📍 Your Roadmap</h2>
+
+        <div class="roadmap">
+            {% for step in career.steps %}
+            <div class="roadmap-step">
+
+                <!-- Step Number -->
+                <div class="step-number">{{ loop.index }}</div>
+
+                <!-- Step Content -->
+                <div class="step-content">
+                    <div class="step-header">
+                        <h3>{{ step.title }}</h3>
+                        <span class="step-duration">⏱ {{ step.duration }}</span>
+                    </div>
+
+                    <!-- Topics -->
+                    <div class="topics">
+                        <h4>📚 Topics to Learn:</h4>
+                        <div class="topics-list">
+                            {% for topic in step.topics %}
+                            <span class="topic-tag">{{ topic }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Free YouTube Links -->
+                    <div class="links">
+                        <h4>🎥 Free YouTube Courses:</h4>
+                        {% for link in step.links %}
+                        <a href="{{ link.url }}" target="_blank" class="course-link">
+                            ▶ {{ link.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Made with ❤️ for IT Students | All courses are FREE on YouTube</p>
+    </footer>
+
+</body>
+</html>
